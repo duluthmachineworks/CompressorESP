@@ -1,0 +1,29 @@
+{
+    "name": "CompressorESP",
+    "version": "0.0.1",
+    "description": "A library for controlling air compressors from ESP32 relay boards",
+    "keywords": "compressed-air, compressor, motor, industrial",
+    "repository":
+    {
+      "type": "git",
+      "url": ""
+    },
+    "authors":
+    [
+      {
+        "name": "Chris Lee",
+        "email": "chris@duluthmachineworks.com",
+        "url": "https://www.duluthmachineworks.com"
+      }
+    ],
+    "license": "GPL-2.0-or-later",
+    "homepage": "https://www.duluthmachineworks.com",
+    "dependencies": {
+      
+    },
+    "frameworks": "arduino",
+    "platforms": 
+    [
+      "espressif32"
+    ]
+  }
