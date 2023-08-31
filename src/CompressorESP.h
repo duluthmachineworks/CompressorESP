@@ -1,4 +1,4 @@
-//CompressorESP.h
+// CompressorESP.h
 
 /*This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -20,18 +20,25 @@
 #define CompressorESP_h
 
 class Compressor {
-    private:
-    uint8_t contactor_pin;
-    uint8_t unloader_pin;
-    uint8_t tank_drain_pin;
-    bool ext_tank_drain = false;
-    int set_high_pressure;
-    int set_low_pressure;
-    int set_max_temp;
-    int set_min_temp;
+private:
+  uint8_t contactor_pin;
+  uint8_t unloader_pin;
+  uint8_t tank_drain_pin;
+  bool ext_tank_drain = false;
+  int set_high_pressure;
+  int set_low_pressure;
+  int set_max_temp;
+  int set_min_temp;
 
-    public:
-    Compressor();
+public:
+  Compressor(uint8_t contactor_pin, uint8_t unloader_pin,
+             uint8_t tank_drain_pin = NULL, bool ext_tank_drain = false,
+             int max_pressure = 120, int start_pressure = 100, int set_max_temp = 175,
+             int set_min_temp = 32);
+  void startCompressor();
+  void stopCompressor();
+  void unloadPump();
+  void drainTank();
 };
 
 #endif
