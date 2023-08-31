@@ -33,8 +33,8 @@ private:
 public:
   Compressor(uint8_t contactor_pin, uint8_t unloader_pin,
              uint8_t tank_drain_pin = NULL, bool ext_tank_drain = false,
-             int max_pressure = 120, int start_pressure = 100, int set_max_temp = 175,
-             int set_min_temp = 32);
+             int max_pressure = 120, int start_pressure = 100, int max_temp = 175,
+             int min_temp = 32);
   void startCompressor();
   void stopCompressor();
   void unloadPump();
