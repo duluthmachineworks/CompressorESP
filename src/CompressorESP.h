@@ -21,24 +21,33 @@
 
 class Compressor {
 private:
-  uint8_t contactor_pin;
-  uint8_t unloader_pin;
-  uint8_t tank_drain_pin;
-  bool ext_tank_drain = false;
-  int set_high_pressure;
-  int set_low_pressure;
-  int set_max_temp;
-  int set_min_temp;
+  const uint8_t contactor_pin;
+  const uint8_t unloader_pin;
+  const uint8_t tank_drain_pin;
+  const bool ext_tank_drain;
+  const bool ext_tank_drain_func; //figure this out later
+  int high_pressure;
+  int low_pressure;
+  int max_temp;
+  int min_temp;
+  int unload_time;
+  int drain_time;
 
 public:
   Compressor(uint8_t contactor_pin, uint8_t unloader_pin,
-             uint8_t tank_drain_pin = NULL, bool ext_tank_drain = false,
-             int max_pressure = 120, int start_pressure = 100, int max_temp = 175,
-             int min_temp = 32);
+             uint8_t tank_drain_pin = NULL, bool ext_tank_drain = false, bool ext_tank_drain_func = NULL,
+             int high_pressure = 120, int low_pressure = 100, int max_temp = 175,
+             int min_temp = 32, int unload_time = 2, int drain_time = 5);
+  
   void startCompressor();
   void stopCompressor();
-  void unloadPump();
-  void drainTank();
+ 
+  bool unloadPump();
+  bool drainTank();
+
+  void setUnloadTime(int s_unload_time);
+  void setDrainTime(int s_drain_time);
+
 };
 
 #endif
