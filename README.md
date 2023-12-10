@@ -3,7 +3,7 @@
 A small library for controlling an air compressor with an ESP32 board.
 
 ## What does it do?
-This library is intended to provide an easy way to take control of an air compressor via an ESP32-powered relay board, susch as the LILYGO T-Relay or other similar models. This allows the mechanical pressure control valve to be removed and replaced with a pressure sensor, and a contactor used to start the motor instead of the mechanical pressure switch.
+This library is intended to provide an easy way to take control of an air compressor via an ESP32-powered relay board, such as the LILYGO T-Relay or other similar models. This allows the mechanical pressure control valve to be removed and replaced with a pressure sensor, and a contactor used to start the motor instead of the mechanical pressure switch.
 
 ## But why?
 Mechanical pressure control switches are generally reliable and effective, but are insufficient for complicated, multi-compressor systems. This library is intended to work with larger projects intended to assemble multiple compressor units in to large parallel "compressor arrays". Digital compressor control could also be integrated in to various IOT style systems, allowing remote monitoring and start/stop of an air compressor system.

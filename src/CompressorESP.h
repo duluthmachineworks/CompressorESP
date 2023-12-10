@@ -41,7 +41,7 @@ private:
 
 public:
   Compressor(uint8_t contactor_pin, uint8_t unloader_pin,
-             uint8_t tank_drain_pin = NULL, bool ext_tank_drain = false, bool ext_tank_drain_func = NULL,
+             uint8_t tank_drain_pin = -1, bool ext_tank_drain = false, bool ext_tank_drain_func = NULL,
              int high_pressure = 120, int low_pressure = 100, int duty_cycle = 26, int max_temp = 175,
              int min_temp = 32, int unload_time = 2, int drain_time = 5);
   

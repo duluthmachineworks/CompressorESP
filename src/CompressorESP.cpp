@@ -1,11 +1,12 @@
 #include "Arduino.h"
 #include "CompressorESP.h"
+//#define START_LAG 3;
 
 // Create a compressor object, with user input
 Compressor::Compressor(uint8_t contactor_pin, uint8_t unloader_pin,
-                       uint8_t tank_drain_pin, bool ext_tank_drain, bool ext_tank_drain_func = NULL,
+                       uint8_t tank_drain_pin, bool ext_tank_drain, bool ext_tank_drain_funcL,
                        int high_pressure, int low_pressure, int duty_cycle, int max_temp,
-                       int min_temp, int unload_time = 2, int drain_time = 5) 
+                       int min_temp, int unload_time, int drain_time) 
     : contactor_pin{contactor_pin}
     , unloader_pin{unloader_pin}
     , tank_drain_pin{tank_drain_pin}
@@ -37,11 +38,22 @@ void Compressor::begin() {
   pinMode(contactor_pin, OUTPUT);
   pinMode(unloader_pin, OUTPUT);
   pinMode(tank_drain_pin, OUTPUT);
+  
 }
 
-void startCompressor();
+void Compressor::startCompressor() {
+  openUnloader();
+  delay(1000);
+  digitalWrite(contactor_pin, HIGH);
+  delay(2000);
+  closeUnloader();
+}
 
-void stopCompressor();
+void Compressor::stopCompressor(){
+  digitalWrite(contactor_pin, LOW);
+  delay(1000);
+  unloadPump();
+}
 
 bool Compressor::unloadPump() {
   openUnloader();
