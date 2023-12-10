@@ -30,15 +30,23 @@ private:
   int low_pressure;
   int max_temp;
   int min_temp;
+  int duty_cycle; //implement later
   int unload_time;
   int drain_time;
+  int run_start_time; //In millis - later
+  int run_end_time; //in millis - later
+
+  void openUnloader();
+  void closeUnloader();
 
 public:
   Compressor(uint8_t contactor_pin, uint8_t unloader_pin,
              uint8_t tank_drain_pin = NULL, bool ext_tank_drain = false, bool ext_tank_drain_func = NULL,
-             int high_pressure = 120, int low_pressure = 100, int max_temp = 175,
+             int high_pressure = 120, int low_pressure = 100, int duty_cycle = 26, int max_temp = 175,
              int min_temp = 32, int unload_time = 2, int drain_time = 5);
   
+  void begin();
+
   void startCompressor();
   void stopCompressor();
  

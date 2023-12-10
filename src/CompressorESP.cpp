@@ -4,7 +4,7 @@
 // Create a compressor object, with user input
 Compressor::Compressor(uint8_t contactor_pin, uint8_t unloader_pin,
                        uint8_t tank_drain_pin, bool ext_tank_drain, bool ext_tank_drain_func = NULL,
-                       int high_pressure, int low_pressure, int max_temp,
+                       int high_pressure, int low_pressure, int duty_cycle, int max_temp,
                        int min_temp, int unload_time = 2, int drain_time = 5) 
     : contactor_pin{contactor_pin}
     , unloader_pin{unloader_pin}
@@ -13,6 +13,7 @@ Compressor::Compressor(uint8_t contactor_pin, uint8_t unloader_pin,
     , ext_tank_drain_func{ext_tank_drain_func}
     , high_pressure{high_pressure}
     , low_pressure{low_pressure}
+    , duty_cycle{duty_cycle}
     , max_temp{max_temp}
     , min_temp{min_temp}
     , unload_time{unload_time}
@@ -20,14 +21,32 @@ Compressor::Compressor(uint8_t contactor_pin, uint8_t unloader_pin,
 {
 }
 
+// --------------------- Private Functions --------------------- //
+
+void Compressor::openUnloader() {
+  digitalWrite(unloader_pin, HIGH);
+}
+
+void Compressor::closeUnloader() {
+  digitalWrite(unloader_pin, LOW);
+}
+
+// --------------------- Public Functions --------------------- //
+void Compressor::begin() {
+  //Sets each of the utilized pins to output
+  pinMode(contactor_pin, OUTPUT);
+  pinMode(unloader_pin, OUTPUT);
+  pinMode(tank_drain_pin, OUTPUT);
+}
+
 void startCompressor();
+
 void stopCompressor();
 
 bool Compressor::unloadPump() {
-  digitalWrite(unloader_pin, HIGH);
+  openUnloader();
   delay(unload_time * 1000);
-  digitalWrite(unloader_pin, LOW);
-
+  closeUnloader();
   return true;
 }
 

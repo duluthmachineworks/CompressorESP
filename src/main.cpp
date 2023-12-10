@@ -1,18 +1,13 @@
 #include <Arduino.h>
+#include <CompressorESP.h>
 
-// put function declarations here:
-int myFunction(int, int);
+#define RELAY_PIN_1 21
+#define RELAY_PIN_2 19
+#define RELAY_PIN_3 18
+#define RELAY_PIN_4 5
+#define LED_PIN     25
 
-void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
-}
 
-void loop() {
-  // put your main code here, to run repeatedly:
-}
+void setup();
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
-}
+void loop();
