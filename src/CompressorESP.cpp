@@ -19,17 +19,35 @@ Compressor::Compressor(uint8_t contactor_pin, uint8_t unloader_pin,
     , min_temp{min_temp}
     , unload_time{unload_time}
     , drain_time{drain_time}
+    , pump_state{pump_state}
+    , unloader_state{unloader_state}
 {
 }
 
 // --------------------- Private Functions --------------------- //
 
 void Compressor::openUnloader() {
+  unloader_state = Open;
+  unloader_start_time = millis();
   digitalWrite(unloader_pin, HIGH);
 }
 
 void Compressor::closeUnloader() {
+  unloader_state = Closed;
+  unloader_start_time = 0;
   digitalWrite(unloader_pin, LOW);
+}
+
+void Compressor::compressorOn() {
+  pump_state = Running;
+  pump_start_time = millis();
+  digitalWrite(contactor_pin, HIGH);
+}
+
+void Compressor::compressorOff() {
+  pump_state = Off;
+  pump_start_time = 0;
+  digitalWrite(contactor_pin, LOW);
 }
 
 // --------------------- Public Functions --------------------- //
@@ -38,16 +56,11 @@ void Compressor::begin() {
   pinMode(contactor_pin, OUTPUT);
   pinMode(unloader_pin, OUTPUT);
   pinMode(tank_drain_pin, OUTPUT);
-  
 }
 
 void Compressor::startCompressor() {
-  openUnloader();
-  delay(1000);
-  digitalWrite(contactor_pin, HIGH);
-  delay(2000);
-  closeUnloader();
-}
+  pump_state = Running;//need to chancge **************************************************************************************
+};
 
 void Compressor::stopCompressor(){
   digitalWrite(contactor_pin, LOW);
@@ -81,4 +94,42 @@ void Compressor::setUnloadTime(int s_unload_time) {
 
 void Compressor::setDrainTime(int s_drain_time) { 
     drain_time = s_drain_time; 
+}
+
+//Operates the state machine for each compressor object. Is called with no arguments every loop().
+PumpState previous_operation_state;
+UlState previous_unloader_state;
+unsigned long current_op_time;
+
+void Compressor::run() { //Stopped here for the night. This needs to change to two separate FSMs, one for the pump, and one for the unloader.
+/*
+  switch (pump_state) {
+  case Off: {
+    if (previous_operation_state != pump_state) {
+      compressorOff();
+    }
+  }
+    break;
+
+  case Unloading: {
+    current_op_time = millis();
+    if (current_op_time >= ((unload_time * 1000) + unloader_start_time)) {
+      closeUnloader();
+    }
+  }
+    break;
+
+  case Starting:
+    break;
+
+  case Running:
+    break;
+
+  default:
+    break;
+  }
+
+
+previous_operation_state = operation_state;
+previous_unloader_state = unloader_state;*/
 }

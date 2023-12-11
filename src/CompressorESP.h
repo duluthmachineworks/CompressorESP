@@ -18,44 +18,63 @@
 #include "Arduino.h"
 #ifndef CompressorESP_h
 #define CompressorESP_h
+// States
+enum PumpState { Off, Running };
+
+enum UlState { Open, Closed };
 
 class Compressor {
 private:
+  // Pins that must be specified
   const uint8_t contactor_pin;
   const uint8_t unloader_pin;
   const uint8_t tank_drain_pin;
+
   const bool ext_tank_drain;
-  const bool ext_tank_drain_func; //figure this out later
+  const bool ext_tank_drain_func; // figure this out later
+
+  // Set points
   int high_pressure;
   int low_pressure;
   int max_temp;
   int min_temp;
-  int duty_cycle; //implement later
+
+  // Other options
+  int duty_cycle; // implement later
   int unload_time;
   int drain_time;
-  int run_start_time; //In millis - later
-  int run_end_time; //in millis - later
+  int run_start_time; // In millis - later
+  int run_end_time;   // in millis - later
+
+  PumpState pump_state;
+  UlState unloader_state;
+  unsigned long pump_start_time;
+  unsigned long unloader_start_time;
+
 
   void openUnloader();
   void closeUnloader();
+  void compressorOn();
+  void compressorOff();
 
 public:
   Compressor(uint8_t contactor_pin, uint8_t unloader_pin,
-             uint8_t tank_drain_pin = -1, bool ext_tank_drain = false, bool ext_tank_drain_func = NULL,
-             int high_pressure = 120, int low_pressure = 100, int duty_cycle = 26, int max_temp = 175,
+             uint8_t tank_drain_pin = -1, bool ext_tank_drain = false,
+             bool ext_tank_drain_func = NULL, int high_pressure = 120,
+             int low_pressure = 100, int duty_cycle = 25, int max_temp = 175,
              int min_temp = 32, int unload_time = 2, int drain_time = 5);
-  
+
   void begin();
+  void run();
 
   void startCompressor();
   void stopCompressor();
- 
+
   bool unloadPump();
   bool drainTank();
 
   void setUnloadTime(int s_unload_time);
   void setDrainTime(int s_drain_time);
-
 };
 
 #endif
