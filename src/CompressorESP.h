@@ -15,6 +15,10 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
+/***************************************************************************
+* Create a class for compressor objects, using user selected values.
+ ****************************************************************************/
+
 #include "Arduino.h"
 #ifndef CompressorESP_h
 #define CompressorESP_h
