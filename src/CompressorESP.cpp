@@ -101,42 +101,64 @@ void Compressor::setDrainTime(int s_drain_time) {
     drain_time = s_drain_time; 
 }
 
-//Operates the state machine for each compressor object. Is called with no arguments every loop().
+// run() operates the state machine for each compressor object. Is called with no arguments every loop().
+//Private variables for run()
 PumpState previous_operation_state;
 UlState previous_unloader_state;
 unsigned long current_op_time;
 
-void Compressor::run() { //Stopped here for the night. This needs to change to two separate FSMs, one for the pump, and one for the unloader.
-//Called in the loop() function. This handles the state management for compressor objects
+void Compressor::run() { 
+  // Called in the loop() function. This handles the state management for
+  // compressor objects
 
-/*
+  //  *** Pump state machine *** //
   switch (pump_state) {
-  case Off: {
-    if (previous_operation_state != pump_state) {
-      compressorOff();
-    }
+  case Offline: {
+    // Do something
+  } break;
+
+  case Online: {
+    // Do something
+  } break;
+
+  case Starting: {
+    // Do something
+  } break;
+
+  case Running: {
+    // Do something
+  } break;
+
+  case Stopping: {
+    // Do something
   }
+  default:
     break;
+  }
+
+  // *** Unloader state machine *** //
+  switch (unloader_state) {
+
+  case Closed: {
+    // Do something
+  } break;
+
+  case Open: {
+    //Do something
+  } break;
 
   case Unloading: {
-    current_op_time = millis();
-    if (current_op_time >= ((unload_time * 1000) + unloader_start_time)) {
-      closeUnloader();
-    }
-  }
-    break;
-
-  case Starting:
-    break;
-
-  case Running:
-    break;
+    //Do something
+  } break;
 
   default:
     break;
   }
 
+  // *** Timer Handling *** //
+  //Track timers here
 
-previous_operation_state = operation_state;
-previous_unloader_state = unloader_state;*/
+  //Save current state for the next loop() run
+  previous_operation_state = pump_state;
+  previous_unloader_state = unloader_state;
 }
