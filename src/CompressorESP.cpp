@@ -7,6 +7,7 @@ Compressor::Compressor(uint8_t contactor_pin, uint8_t unloader_pin,
                        uint8_t tank_drain_pin, bool ext_tank_drain, bool ext_tank_drain_funcL,
                        int high_pressure, int low_pressure, int duty_cycle, int max_temp,
                        int min_temp, int unload_time, int drain_time) 
+    //copy to local variables
     : contactor_pin{contactor_pin}
     , unloader_pin{unloader_pin}
     , tank_drain_pin{tank_drain_pin}
@@ -26,6 +27,7 @@ Compressor::Compressor(uint8_t contactor_pin, uint8_t unloader_pin,
 
 // --------------------- Private Functions --------------------- //
 
+//Direct control functions. These directly start and stop equipment
 void Compressor::openUnloader() {
   unloader_state = Open;
   unloader_start_time = millis();
@@ -39,34 +41,37 @@ void Compressor::closeUnloader() {
 }
 
 void Compressor::compressorOn() {
-  pump_state = Running;
+  pump_state = Starting;
   pump_start_time = millis();
   digitalWrite(contactor_pin, HIGH);
 }
 
 void Compressor::compressorOff() {
-  pump_state = Off;
+  pump_state = Online;
   pump_start_time = 0;
   digitalWrite(contactor_pin, LOW);
 }
 
 // --------------------- Public Functions --------------------- //
 void Compressor::begin() {
-  //Sets each of the utilized pins to output
+  //Called during setup(), Sets each of the utilized pins to output
   pinMode(contactor_pin, OUTPUT);
   pinMode(unloader_pin, OUTPUT);
   pinMode(tank_drain_pin, OUTPUT);
 }
 
+/*
+All this needs to be re-written to use the private direct control functions
+
 void Compressor::startCompressor() {
-  pump_state = Running;//need to chancge **************************************************************************************
+  pump_state = Running;
 };
 
 void Compressor::stopCompressor(){
   digitalWrite(contactor_pin, LOW);
   delay(1000);
   unloadPump();
-}
+}*/
 
 bool Compressor::unloadPump() {
   openUnloader();
@@ -102,6 +107,8 @@ UlState previous_unloader_state;
 unsigned long current_op_time;
 
 void Compressor::run() { //Stopped here for the night. This needs to change to two separate FSMs, one for the pump, and one for the unloader.
+//Called in the loop() function. This handles the state management for compressor objects
+
 /*
   switch (pump_state) {
   case Off: {

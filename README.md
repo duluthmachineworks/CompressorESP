@@ -10,7 +10,7 @@ Mechanical pressure control switches are generally reliable and effective, but a
 
 ## How does it work?
 
-This library allows you to create a *compressor* object with the following features:
+This library allows creates a *compressor* object with the following features:
 - The main contactor to control the motor
 - A solenoid-controlled unloader valve which takes the place of a mechanical unloader valve
 - A motor temperature sensor for thermal overload sensing

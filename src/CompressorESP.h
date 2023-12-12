@@ -18,11 +18,12 @@
 #include "Arduino.h"
 #ifndef CompressorESP_h
 #define CompressorESP_h
-// States
-enum PumpState { Off, Running };
 
-enum UlState { Open, Closed };
+// Enumerated States
+enum PumpState { Offline, Online, Starting, Running, Stopping };
+enum UlState { Open, Unloading, Closed };
 
+//Compressor class definition
 class Compressor {
 private:
   // Pins that must be specified
@@ -30,6 +31,7 @@ private:
   const uint8_t unloader_pin;
   const uint8_t tank_drain_pin;
 
+  //tank drain stuff, implement later
   const bool ext_tank_drain;
   const bool ext_tank_drain_func; // figure this out later
 
@@ -46,12 +48,15 @@ private:
   int run_start_time; // In millis - later
   int run_end_time;   // in millis - later
 
+  //States
   PumpState pump_state;
   UlState unloader_state;
+
+  //Time recording
   unsigned long pump_start_time;
   unsigned long unloader_start_time;
 
-
+  //Private direct control functions
   void openUnloader();
   void closeUnloader();
   void compressorOn();
