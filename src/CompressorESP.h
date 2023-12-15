@@ -27,60 +27,51 @@
 enum PumpState { Offline, Online, Starting, Running, Stopping };
 enum UlState { Open, Unloading, Closed };
 
-//Compressor class definition
+// Compressor class definition
 class Compressor {
 private:
   // Pins that must be specified
   const uint8_t contactor_pin;
   const uint8_t unloader_pin;
-  const uint8_t tank_drain_pin;
-
-  //tank drain stuff, implement later
-  const bool ext_tank_drain;
-  const bool ext_tank_drain_func; // figure this out later
+  const uint8_t temp_sensor_pin;
 
   // Set points
   int high_pressure;
   int low_pressure;
   int max_temp;
   int min_temp;
-
-  // Other options
-  int duty_cycle; // implement later
+  int duty_cycle; // in min/hr
   int unload_time;
-  int drain_time;
-  int run_start_time; // In millis - later
-  int run_end_time;   // in millis - later
 
   // States
   PumpState pump_state;
   UlState unloader_state;
   PumpState previous_pump_state;
   UlState previous_unloader_state;
-  
-  
-  
 
-  //Time recording
+  // Time recording
   unsigned long pump_start_time;
   unsigned long unloader_start_time;
   unsigned long current_millis;
 
-  //Private direct control functions
+  // data recording
+  unsigned long acc_run_time;
+  
+
+  // Private direct control functions
   void openUnloader();
   void closeUnloader();
   void compressorOn();
   void compressorOff();
 
-  //Private helper functions
+  // Private helper functions
   bool stateIsChanged();
 
 public:
   Compressor(uint8_t contactor_pin, uint8_t unloader_pin,
-             uint8_t tank_drain_pin = -1, bool ext_tank_drain = false,
-             bool ext_tank_drain_func = NULL, int high_pressure = 120,
-             int low_pressure = 100, int duty_cycle = 25, int max_temp = 175,
-             int min_temp = 32, int unload_time = 2, int drain_time = 5);
+             uint8_t temp_sensor_pin, int high_pressure = 120,
+             int low_pressure = 100, int duty_cycle = 30, int max_temp = 175,
+             int min_temp = 32, int unload_time = 2);
 
   void begin();
   void run();
@@ -97,8 +88,6 @@ public:
 
   PumpState getPumpState();
   UlState getUnloaderState();
-
-  
 };
 
 #endif

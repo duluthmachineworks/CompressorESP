@@ -4,13 +4,15 @@
 // Relay pins for LILYGO T-Relay Board
 #define RELAY_PIN_1 21 // Pump 1 contactor
 #define RELAY_PIN_2 19 // Pump 1 unloader
+#define TEMP_PIN_1  34 // Pump 1 temp sensor
 #define RELAY_PIN_3 18 // Pump 2 contactor
 #define RELAY_PIN_4 5  // Pump 2 unloader
+#define TEMP_PIN_2 34  // Pump 2 temp sensor
 #define LED_PIN 25     // Onboard status LED
 #define SWITCH_PIN 34  // Pin for a test button
 
-Compressor pump1(RELAY_PIN_1, RELAY_PIN_2, RELAY_PIN_1);
-Compressor pump2(RELAY_PIN_3, RELAY_PIN_4, RELAY_PIN_3);
+Compressor pump1(RELAY_PIN_1, RELAY_PIN_2, TEMP_PIN_1);
+Compressor pump2(RELAY_PIN_3, RELAY_PIN_4, TEMP_PIN_2);
 
 //variables for testing
 int buttonState = 0;

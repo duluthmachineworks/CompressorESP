@@ -4,22 +4,19 @@
 
 // Create a compressor object, with user input
 Compressor::Compressor(uint8_t contactor_pin, uint8_t unloader_pin,
-                       uint8_t tank_drain_pin, bool ext_tank_drain, bool ext_tank_drain_funcL,
-                       int high_pressure, int low_pressure, int duty_cycle, int max_temp,
-                       int min_temp, int unload_time, int drain_time) 
+             uint8_t temp_sensor_pin, int high_pressure,
+             int low_pressure, int duty_cycle, int max_temp,
+             int min_temp, int unload_time)
     //copy to local variables
     : contactor_pin{contactor_pin}
     , unloader_pin{unloader_pin}
-    , tank_drain_pin{tank_drain_pin}
-    , ext_tank_drain{ext_tank_drain}
-    , ext_tank_drain_func{ext_tank_drain_func}
+    , temp_sensor_pin{temp_sensor_pin}
     , high_pressure{high_pressure}
     , low_pressure{low_pressure}
     , duty_cycle{duty_cycle}
     , max_temp{max_temp}
     , min_temp{min_temp}
     , unload_time{unload_time}
-    , drain_time{drain_time}
     , pump_state{pump_state}
     , unloader_state{unloader_state}
 {
@@ -65,7 +62,7 @@ void Compressor::begin() {
   //Called during setup(), Sets each of the utilized pins to output
   pinMode(contactor_pin, OUTPUT);
   pinMode(unloader_pin, OUTPUT);
-  pinMode(tank_drain_pin, OUTPUT);
+  pinMode(temp_sensor_pin, INPUT);
 }
 
 void Compressor::startCompressor() {
@@ -98,9 +95,6 @@ void Compressor::setUnloadTime(int s_unload_time) {
   unload_time = s_unload_time;
 }
 
-void Compressor::setDrainTime(int s_drain_time) { 
-    drain_time = s_drain_time; 
-}
 
 PumpState Compressor::getPumpState() {
   return pump_state;
