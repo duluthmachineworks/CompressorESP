@@ -26,6 +26,7 @@
 // Enumerated States
 enum PumpState { Offline, Online, Starting, Running, Stopping };
 enum UlState { Open, Unloading, Closed };
+enum ErrorCode { None, Offline_err, EStop_err, Unload_err, Motor_err };
 
 // Compressor class definition
 class Compressor {
@@ -56,7 +57,8 @@ private:
 
   // data recording
   unsigned long acc_run_time;
-  
+  ErrorCode error_state = None;
+
 
   // Private direct control functions
   void openUnloader();
@@ -83,11 +85,14 @@ public:
   void unloadPump();
   void drainTank();
 
+  //Setter functions
   void setUnloadTime(int s_unload_time);
   void setDrainTime(int s_drain_time);
 
+  //Getter functions
   PumpState getPumpState();
   UlState getUnloaderState();
+  int getErrorState();
 };
 
 #endif

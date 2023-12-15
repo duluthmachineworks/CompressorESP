@@ -19,6 +19,7 @@ Compressor::Compressor(uint8_t contactor_pin, uint8_t unloader_pin,
     , unload_time{unload_time}
     , pump_state{pump_state}
     , unloader_state{unloader_state}
+    , error_state{error_state}
 {
 }
 
@@ -66,8 +67,19 @@ void Compressor::begin() {
 }
 
 void Compressor::startCompressor() {
-  unloadPump();
-  compressorOn();
+  switch (pump_state) {
+    
+  case Offline: {
+    error_state = Offline_err;
+  } break;
+
+  case Online: {
+    unloadPump();
+    compressorOn();
+  }
+  default:
+    break;
+  }
 };
 
 void Compressor::stopCompressor(){
@@ -79,6 +91,7 @@ void Compressor::eStop() {
   compressorOff();
   openUnloader();
   pump_state = Offline;
+  error_state = EStop_err;
 }
 
 void Compressor::unloadPump() {
@@ -91,11 +104,12 @@ void Compressor::drainTank() {
  return;
 }
 
+// ---- Setter functions ---- //
 void Compressor::setUnloadTime(int s_unload_time) {
   unload_time = s_unload_time;
 }
 
-
+// ---- Getter functions ---- //
 PumpState Compressor::getPumpState() {
   return pump_state;
 }
