@@ -12,9 +12,11 @@
 Compressor pump1(RELAY_PIN_1, RELAY_PIN_2, RELAY_PIN_1);
 Compressor pump2(RELAY_PIN_3, RELAY_PIN_4, RELAY_PIN_3);
 
-//button variables for testing
+//variables for testing
 int buttonState = 0;
 int lastButtonState = 0;
+int startup_time;
+int startup_run = 0;
 
 void setup() {
   // Init serial
@@ -32,18 +34,47 @@ void setup() {
   pump1.begin();
   pump2.begin();
 
-  //Run a test unloader action
-  if (pump1.unloadPump()) {
-    Serial.println("Pump 1 Unloaded");
-  }
+
   delay(500);
-  if (pump2.unloadPump()) {
-    Serial.println("Pump 2 Unloaded");
-  }
-  delay(500);
+  startup_time = millis();
 }
 
 void loop() {
   pump1.run();
   pump2.run();
+
+//Run through a sequence for testing
+//does a run cycle on both pump 1 and 2, staggered, starts a new run cycle on pump 1, and then e-stops both.
+if ((millis() >= startup_time + 3000) && startup_run == 0){
+  pump1.startCompressor();
+  Serial.println("Starting compressor 1");
+  startup_run = 1;
+}
+
+if ((millis() >= startup_time + 4000) && startup_run == 1){
+  pump2.startCompressor();
+  Serial.println("Starting compressor 2");
+  startup_run = 2;
+}
+
+if ((millis() >= startup_time + 7000) && startup_run == 2){
+  pump1.stopCompressor();
+  Serial.println("Stopping compressor 1");
+  startup_run = 3;
+}
+
+if((millis() >= startup_time + 9000) && startup_run == 3) {
+  pump2.stopCompressor();
+  pump1.startCompressor();
+  Serial.println("Stopping compressor 2");
+  Serial.println("Re-starting compressor 1");
+  startup_run = 4;
+}
+if ((millis() >= startup_time + 16000) && startup_run == 4) {
+  pump1.eStop();
+  pump2.eStop();
+  Serial.println("E-stop all pumps");
+  startup_run = 5;
+}
+ 
 }

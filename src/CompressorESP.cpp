@@ -30,7 +30,7 @@ Compressor::Compressor(uint8_t contactor_pin, uint8_t unloader_pin,
 //Direct control functions. These directly start and stop equipment
 void Compressor::openUnloader() {
   unloader_state = Open;
-  unloader_start_time = millis();
+  unloader_start_time = current_millis;
   digitalWrite(unloader_pin, HIGH);
 }
 
@@ -41,8 +41,8 @@ void Compressor::closeUnloader() {
 }
 
 void Compressor::compressorOn() {
-  pump_state = Starting;
-  pump_start_time = millis();
+  pump_state = Running;
+  pump_start_time = current_millis;
   digitalWrite(contactor_pin, HIGH);
 }
 
@@ -50,6 +50,14 @@ void Compressor::compressorOff() {
   pump_state = Online;
   pump_start_time = 0;
   digitalWrite(contactor_pin, LOW);
+}
+
+bool Compressor::stateIsChanged() {
+  if (pump_state != previous_pump_state && unloader_state != previous_unloader_state) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 // --------------------- Public Functions --------------------- //
@@ -60,37 +68,30 @@ void Compressor::begin() {
   pinMode(tank_drain_pin, OUTPUT);
 }
 
-/*
-All this needs to be re-written to use the private direct control functions
-
 void Compressor::startCompressor() {
-  pump_state = Running;
+  unloadPump();
+  compressorOn();
 };
 
 void Compressor::stopCompressor(){
-  digitalWrite(contactor_pin, LOW);
-  delay(1000);
+  compressorOff();
   unloadPump();
-}*/
-
-bool Compressor::unloadPump() {
-  openUnloader();
-  delay(unload_time * 1000);
-  closeUnloader();
-  return true;
 }
 
-bool Compressor::drainTank() {
-  if (ext_tank_drain) {
-    return false;
-    //Eventually will execute ext_tank_drain_func
-  } else {
-    digitalWrite(tank_drain_pin, HIGH);
-    delay(drain_time * 1000);
-    digitalWrite(tank_drain_pin, LOW);
-  }
+void Compressor::eStop() {
+  compressorOff();
+  openUnloader();
+  pump_state = Offline;
+}
 
-  return true; //do I want to do this?
+void Compressor::unloadPump() {
+  unloader_state = Unloading;
+  unloader_start_time = current_millis;
+  digitalWrite(unloader_pin, HIGH);
+}
+
+void Compressor::drainTank() {
+ return;
 }
 
 void Compressor::setUnloadTime(int s_unload_time) {
@@ -101,36 +102,45 @@ void Compressor::setDrainTime(int s_drain_time) {
     drain_time = s_drain_time; 
 }
 
-// run() operates the state machine for each compressor object. Is called with no arguments every loop().
-//Private variables for run()
-PumpState previous_operation_state;
-UlState previous_unloader_state;
-unsigned long current_op_time;
+PumpState Compressor::getPumpState() {
+  return pump_state;
+}
 
-void Compressor::run() { 
+UlState Compressor::getUnloaderState() {
+  return unloader_state;
+}
+
+// run() operates the state machine for each compressor object. Is called with no arguments every loop().
+
+void Compressor::run() {
   // Called in the loop() function. This handles the state management for
   // compressor objects
+
+  // Get the current time to sync all functions
+  current_millis = millis();
 
   //  *** Pump state machine *** //
   switch (pump_state) {
   case Offline: {
-    // Do something
-  } break;
+    //Do something
+  }
 
   case Online: {
     // Do something
-  } break;
+  }
 
   case Starting: {
-    // Do something
-  } break;
+    /*if (stateIsChanged()) {
+      startCompressor();
+    }*/
+  }
 
   case Running: {
     // Do something
-  } break;
+  }
 
   case Stopping: {
-    // Do something
+    //stopCompressor();
   }
   default:
     break;
@@ -141,24 +151,24 @@ void Compressor::run() {
 
   case Closed: {
     // Do something
-  } break;
+  }
 
   case Open: {
-    //Do something
+    // Do something
   } break;
 
   case Unloading: {
-    //Do something
+    if (current_millis >= (unloader_start_time + (unload_time * 1000))) {
+     closeUnloader();
+    }
   } break;
 
   default:
     break;
   }
 
-  // *** Timer Handling *** //
-  //Track timers here
-
-  //Save current state for the next loop() run
-  previous_operation_state = pump_state;
+ 
+  // Save current state for the next loop() run
+  previous_pump_state = pump_state;
   previous_unloader_state = unloader_state;
 }

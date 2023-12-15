@@ -52,19 +52,28 @@ private:
   int run_start_time; // In millis - later
   int run_end_time;   // in millis - later
 
-  //States
+  // States
   PumpState pump_state;
   UlState unloader_state;
+  PumpState previous_pump_state;
+  UlState previous_unloader_state;
+  
+  
+  
 
   //Time recording
   unsigned long pump_start_time;
   unsigned long unloader_start_time;
+  unsigned long current_millis;
 
   //Private direct control functions
   void openUnloader();
   void closeUnloader();
   void compressorOn();
   void compressorOff();
+
+  //Private helper functions
+  bool stateIsChanged();
 
 public:
   Compressor(uint8_t contactor_pin, uint8_t unloader_pin,
@@ -78,12 +87,18 @@ public:
 
   void startCompressor();
   void stopCompressor();
+  void eStop();
 
-  bool unloadPump();
-  bool drainTank();
+  void unloadPump();
+  void drainTank();
 
   void setUnloadTime(int s_unload_time);
   void setDrainTime(int s_drain_time);
+
+  PumpState getPumpState();
+  UlState getUnloaderState();
+
+  
 };
 
 #endif
