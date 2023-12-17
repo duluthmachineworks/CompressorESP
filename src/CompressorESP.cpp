@@ -141,6 +141,9 @@ UlState Compressor::getUnloaderState() {
   return unloader_state;
 }
 
+ErrorCode Compressor::getErrorState() {
+    return error_state;
+  }
 // run() operates the state machine for each compressor object. Is called with no arguments every loop().
 
 void Compressor::run() {

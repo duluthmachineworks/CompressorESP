@@ -50,18 +50,24 @@ void loop() {
 if ((millis() >= startup_time + 3000) && startup_run == 0){
   pump1.startCompressor();
   Serial.println("Starting compressor 1");
+  Serial.print("Error state: ");
+  Serial.println(pump1.getErrorState());
   startup_run = 1;
 }
 
 if ((millis() >= startup_time + 4000) && startup_run == 1){
   pump2.startCompressor();
   Serial.println("Starting compressor 2");
+  Serial.print("Error state: ");
+  Serial.println(pump1.getErrorState());
   startup_run = 2;
 }
 
 if ((millis() >= startup_time + 7000) && startup_run == 2){
   pump1.stopCompressor();
   Serial.println("Stopping compressor 1");
+  Serial.print("Error state: ");
+  Serial.println(pump1.getErrorState());
   startup_run = 3;
 }
 
@@ -70,12 +76,16 @@ if((millis() >= startup_time + 9000) && startup_run == 3) {
   pump1.startCompressor();
   Serial.println("Stopping compressor 2");
   Serial.println("Re-starting compressor 1");
+  Serial.print("Error state: ");
+  Serial.println(pump1.getErrorState());
   startup_run = 4;
 }
 if ((millis() >= startup_time + 16000) && startup_run == 4) {
   pump1.eStop();
   pump2.eStop();
   Serial.println("E-stop all pumps");
+  Serial.print("Error state: ");
+  Serial.println(pump1.getErrorState());
   startup_run = 5;
 }
  

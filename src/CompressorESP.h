@@ -95,7 +95,7 @@ public:
   //Getter functions
   PumpState getPumpState();
   UlState getUnloaderState();
-  int getErrorState();
+  ErrorCode getErrorState();
 };
 
 #endif
