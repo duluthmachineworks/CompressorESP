@@ -64,6 +64,9 @@ void Compressor::begin() {
   pinMode(contactor_pin, OUTPUT);
   pinMode(unloader_pin, OUTPUT);
   pinMode(temp_sensor_pin, INPUT);
+
+  //Take the unit online
+  takeOnline();
 }
 
 void Compressor::takeOnline() {
@@ -105,9 +108,8 @@ void Compressor::stopCompressor(){
 }
 
 void Compressor::eStop() {
-  compressorOff();
+  takeOffline();
   openUnloader();
-  pump_state = Offline;
   error_state = EStop_err;
 }
 
