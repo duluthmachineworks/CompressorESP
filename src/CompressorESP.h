@@ -24,7 +24,7 @@
 #define CompressorESP_h
 
 // Enumerated States
-enum PumpState { Offline, Online, Starting, Running, Stopping };
+enum PumpState { Offline, Online, Running };
 enum UlState { Open, Unloading, Closed };
 enum ErrorCode { None, Offline_err, EStop_err, Unload_err, Motor_err };
 
@@ -77,6 +77,8 @@ public:
 
   void begin();
   void run();
+  void takeOnline();
+  void takeOffline();
 
   void startCompressor();
   void stopCompressor();
@@ -88,6 +90,7 @@ public:
   //Setter functions
   void setUnloadTime(int s_unload_time);
   void setDrainTime(int s_drain_time);
+  void clearErrorCode();
 
   //Getter functions
   PumpState getPumpState();

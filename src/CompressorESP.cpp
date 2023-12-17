@@ -66,9 +66,26 @@ void Compressor::begin() {
   pinMode(temp_sensor_pin, INPUT);
 }
 
+void Compressor::takeOnline() {
+  //Do not allow compressor to become online without clearing errors
+  switch (error_state) {
+    case None: {
+      pump_state = Online;
+    } break;
+
+    default:
+    break;
+  }
+}
+
+void Compressor::takeOffline() {
+  stopCompressor();
+  pump_state = Offline;
+}
+
 void Compressor::startCompressor() {
   switch (pump_state) {
-    
+
   case Offline: {
     error_state = Offline_err;
   } break;
@@ -109,6 +126,10 @@ void Compressor::setUnloadTime(int s_unload_time) {
   unload_time = s_unload_time;
 }
 
+void Compressor::clearErrorCode() {
+  error_state = None;
+}
+
 // ---- Getter functions ---- //
 PumpState Compressor::getPumpState() {
   return pump_state;
@@ -137,19 +158,12 @@ void Compressor::run() {
     // Do something
   }
 
-  case Starting: {
-    /*if (stateIsChanged()) {
-      startCompressor();
-    }*/
-  }
+  
 
   case Running: {
     // Do something
   }
 
-  case Stopping: {
-    //stopCompressor();
-  }
   default:
     break;
   }
